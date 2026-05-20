@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chonis — Coming Late Fall</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --silver: #c8cdd4;
+      --silver-light: #e8ecf0;
+      --silver-dim: #7a828c;
+      --silver-faint: #3a4048;
+      --dark: #080808;
+      --dark-2: #141414;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--dark);
+      color: var(--silver);
+      font-family: 'Cormorant Garamond', serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 3rem;
+      background: linear-gradient(to bottom, rgba(8,8,8,0.97), transparent);
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+    }
+    .nav-logo-img {
+      height: 32px;
+      width: auto;
+      mix-blend-mode: screen;
+      filter: brightness(0.9);
+    }
+    .nav-tag {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 300;
+      letter-spacing: 0.35em;
+      color: var(--silver-dim);
+      text-transform: uppercase;
+    }
+
+    /* ── HERO: TRUE SIDE BY SIDE ── */
+    .hero {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: row;
+      background: var(--dark);
+      padding-top: 5rem;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      flex: 0 0 50%;
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 3rem 2.5rem;
+    }
+
+    .hero-right {
+      flex: 0 0 50%;
+      width: 50%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-model-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 18%;
+      display: block;
+      filter: brightness(0.9) contrast(1.05);
+    }
+
+    /* Edge fades on photo */
+    .hf-top, .hf-bottom, .hf-left, .hf-right {
+      position: absolute;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .hf-top    { top: 0; left: 0; right: 0; height: 18%; background: linear-gradient(to bottom, var(--dark), transparent); }
+    .hf-bottom { bottom: 0; left: 0; right: 0; height: 18%; background: linear-gradient(to top, var(--dark), transparent); }
+    .hf-left   { top: 0; left: 0; bottom: 0; width: 28%; background: linear-gradient(to right, var(--dark), transparent); }
+    .hf-right  { top: 0; right: 0; bottom: 0; width: 12%; background: linear-gradient(to left, var(--dark), transparent); }
+
+    /* Hero text elements */
+    .hero-eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.58rem;
+      font-weight: 300;
+      letter-spacing: 0.5em;
+      color: var(--silver-dim);
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.3s forwards;
+    }
+    .hero-logo-img {
+      width: 90%;
+      max-width: 380px;
+      height: auto;
+      mix-blend-mode: screen;
+      filter: brightness(0.95);
+      opacity: 0;
+      animation: fadeUp 1.2s ease 0.5s forwards;
+      margin-bottom: 0.5rem;
+    }
+    .hero-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.8rem 0;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.8s forwards;
+    }
+    .hero-divider span {
+      width: 40px; height: 1px;
+      background: linear-gradient(to right, transparent, var(--silver-faint));
+    }
+    .hero-divider span:last-child {
+      background: linear-gradient(to left, transparent, var(--silver-faint));
+    }
+    .hero-divider-icon { color: var(--silver-faint); font-size: 0.6rem; letter-spacing: 0.3em; }
+    .hero-sub {
+      font-size: clamp(0.95rem, 1.8vw, 1.25rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--silver-dim);
+      max-width: 360px;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp 1s ease 1s forwards;
+    }
+    .hero-drop {
+      margin-top: 2.5rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.45em;
+      color: var(--silver-dim);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 1s ease 1.2s forwards;
+    }
+    .scroll-hint {
+      margin-top: 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      animation: fadeIn 1s ease 2s forwards;
+    }
+    .scroll-hint span {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.5rem;
+      letter-spacing: 0.4em;
+      color: var(--silver-faint);
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px; height: 35px;
+      background: linear-gradient(to bottom, var(--silver-faint), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* PRODUCT SECTION */
+    .product-section {
+      padding: 7rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-top: 1px solid rgba(200,205,212,0.06);
+    }
+    .section-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.58rem;
+      font-weight: 300;
+      letter-spacing: 0.55em;
+      color: var(--silver-dim);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .product-heading {
+      font-family: 'UnifrakturMaguntia', cursive;
+      font-size: clamp(2rem, 4vw, 3rem);
+      background: linear-gradient(135deg, #7a828c, #e8ecf0, #7a828c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+    .product-img-wrap {
+      position: relative;
+      max-width: 820px;
+      width: 100%;
+      overflow: hidden;
+    }
+    .product-img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, var(--dark) 0%, transparent 18%, transparent 82%, var(--dark) 100%),
+        linear-gradient(to right, var(--dark) 0%, transparent 15%, transparent 85%, var(--dark) 100%);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .product-img { width: 100%; display: block; filter: brightness(0.95) contrast(1.04); }
+    .product-caption {
+      margin-top: 1.8rem;
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--silver-dim);
+      text-align: center;
+    }
+
+    /* STORY */
+    .section { padding: 8rem 2rem; max-width: 1100px; margin: 0 auto; }
+    .story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+    .story-heading {
+      font-family: 'UnifrakturMaguntia', cursive;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      line-height: 1.1;
+      background: linear-gradient(135deg, #7a828c, #e8ecf0, #9aa3ad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 2rem;
+    }
+    .story-body p { font-size: 1.15rem; font-weight: 300; line-height: 1.9; color: var(--silver-dim); margin-bottom: 1.4rem; }
+    .story-body p em { color: var(--silver-light); font-style: italic; }
+    .ornament-frame {
+      border: 1px solid rgba(200,205,212,0.12);
+      padding: 3.5rem 2.5rem;
+      text-align: center;
+      position: relative;
+    }
+    .ornament-frame::before, .ornament-frame::after {
+      content: '◆'; position: absolute; color: var(--silver-faint); font-size: 0.7rem;
+    }
+    .ornament-frame::before { top: -0.5rem; left: 50%; transform: translateX(-50%); }
+    .ornament-frame::after  { bottom: -0.5rem; left: 50%; transform: translateX(-50%); }
+    .ornament-quote { font-size: 1.25rem; font-style: italic; font-weight: 300; line-height: 1.8; color: var(--silver); }
+    .ornament-attr { font-family: 'Montserrat', sans-serif; font-size: 0.58rem; letter-spacing: 0.4em; color: var(--silver-faint); text-transform: uppercase; margin-top: 1rem; }
+
+    /* PILLARS */
+    .pillars {
+      padding: 6rem 2rem;
+      background: linear-gradient(to bottom, var(--dark), var(--dark-2) 50%, var(--dark));
+      border-top: 1px solid rgba(200,205,212,0.06);
+      border-bottom: 1px solid rgba(200,205,212,0.06);
+    }
+    .pillars-inner { max-width: 1100px; margin: 0 auto; }
+    .pillars-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem; margin-top: 4rem; }
+    .pillar { text-align: center; padding: 2rem 1rem; position: relative; }
+    .pillar::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 1px; height: 30px; background: var(--silver-faint); }
+    .pillar-icon { font-size: 1rem; color: var(--silver-dim); margin-bottom: 1.2rem; display: block; }
+    .pillar h3 {
+      font-family: 'UnifrakturMaguntia', cursive;
+      font-size: 1.6rem;
+      background: linear-gradient(135deg, #7a828c, #e8ecf0, #9aa3ad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+    .pillar p { font-size: 1rem; font-weight: 300; line-height: 1.8; color: #5a6068; }
+
+    /* NEWSLETTER */
+    .newsletter { padding: 9rem 2rem; text-align: center; position: relative; overflow: hidden; }
+    .newsletter::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(200,205,212,0.03), transparent);
+      pointer-events: none;
+    }
+    .newsletter-heading {
+      font-family: 'UnifrakturMaguntia', cursive;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      background: linear-gradient(135deg, #6a737d, #e8ecf0, #7a828c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+    .newsletter-sub { font-size: 1.15rem; font-style: italic; font-weight: 300; color: var(--silver-dim); max-width: 480px; margin: 0 auto 3rem; line-height: 1.7; }
+    .form-row { display: flex; justify-content: center; max-width: 500px; margin: 0 auto; }
+    .form-row input[type="email"] {
+      flex: 1; padding: 1rem 1.4rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(200,205,212,0.15); border-right: none;
+      color: var(--silver-light);
+      font-family: 'Montserrat', sans-serif; font-size: 0.72rem; letter-spacing: 0.15em;
+      outline: none; transition: border-color 0.3s;
+    }
+    .form-row input[type="email"]::placeholder { color: #3a4048; }
+    .form-row input[type="email"]:focus { border-color: var(--silver-dim); }
+    .form-row button {
+      padding: 1rem 2rem;
+      background: var(--silver-dim); border: 1px solid var(--silver-dim);
+      color: var(--dark);
+      font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 400; letter-spacing: 0.35em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.3s, color 0.3s;
+    }
+    .form-row button:hover { background: transparent; color: var(--silver); border-color: var(--silver); }
+    .form-note { margin-top: 1.2rem; font-family: 'Montserrat', sans-serif; font-size: 0.55rem; letter-spacing: 0.3em; color: #2a2e32; text-transform: uppercase; }
+    .success-msg { display: none; font-size: 1.1rem; font-style: italic; color: var(--silver-light); margin-top: 1.5rem; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid rgba(200,205,212,0.07); padding: 3rem 2rem; text-align: center; }
+    .footer-logo-img { height: 40px; width: auto; mix-blend-mode: screen; opacity: 0.4; display: block; margin: 0 auto 1rem; }
+    .footer-copy { font-family: 'Montserrat', sans-serif; font-size: 0.55rem; letter-spacing: 0.3em; color: #2a2e32; text-transform: uppercase; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes scrollPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.9s ease, transform 0.9s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.2rem; }
+      .nav-tag { display: none !important; }
+
+      /* Hero stays side by side but tighter */
+      .hero { padding-top: 0; min-height: 100svh; }
+      .hero-left { padding: 5rem 1rem 2rem 1rem; justify-content: center; }
+      .hero-logo-img { width: 100%; max-width: 160px; }
+      .hero-eyebrow { font-size: 0.48rem; letter-spacing: 0.3em; margin-bottom: 1rem; }
+      .hero-divider { margin: 1rem 0; }
+      .hero-divider span { width: 20px; }
+      .hero-sub { font-size: 0.85rem; max-width: 100%; }
+      .hero-drop { font-size: 0.48rem; margin-top: 1.2rem; }
+      .scroll-hint { display: none !important; }
+      .hero-divider { display: none !important; }
+
+      /* Story: single column, compact */
+      .story-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .story-heading { font-size: 1.8rem; margin-bottom: 1rem; }
+      .story-body p { font-size: 1rem; line-height: 1.7; margin-bottom: 1rem; }
+      .section { padding: 4rem 1.5rem; }
+      .ornament-frame { padding: 2rem 1.5rem; }
+      .ornament-quote { font-size: 1rem; }
+
+      /* Pillars: single column */
+      .pillars { padding: 4rem 1.5rem; }
+      .pillars-grid { grid-template-columns: 1fr; gap: 1.5rem; margin-top: 2rem; }
+      .pillar { padding: 1.5rem 0.5rem; }
+      .pillar h3 { font-size: 1.3rem; }
+      .pillar p { font-size: 0.9rem; }
+
+      /* Product */
+      .product-section { padding: 4rem 1.5rem; }
+      .product-heading { font-size: 1.6rem; margin-bottom: 1.5rem; }
+
+      /* Newsletter */
+      .newsletter { padding: 4rem 1.5rem; }
+      .newsletter-heading { font-size: 2rem; }
+      .newsletter-sub { font-size: 1rem; }
+      .form-row { flex-direction: column; }
+      .form-row input[type="email"] { border-right: 1px solid rgba(200,205,212,0.15); border-bottom: none; }
+      .form-row button { padding: 0.9rem; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="#" class="nav-logo">
+      <img src="Chonis-Logo.png" alt="Chonis" class="nav-logo-img" />
+    </a>
+    <span class="nav-tag">Yeah, We Said It · Coming Late Fall</span>
+  </nav>
+
+  <!-- HERO: side by side -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-eyebrow">The Official Underwear of La Raza</p>
+      <img src="Chonis-Logo.png" alt="Chonis" class="hero-logo-img" />
+      <div class="hero-divider">
+        <span></span>
+        <span class="hero-divider-icon">◆ ◆ ◆</span>
+        <span></span>
+      </div>
+      <p class="hero-sub">You've been wearing chonis your whole life. Might as well make 'em hit.</p>
+      <p class="hero-drop">The Drop · Late Fall 2025</p>
+      <div class="scroll-hint">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <img src="chonis-model.PNG" alt="Chonis model" class="hero-model-img" />
+      <div class="hf-top"></div>
+      <div class="hf-bottom"></div>
+      <div class="hf-left"></div>
+      <div class="hf-right"></div>
+    </div>
+  </section>
+
+  <!-- PRODUCT -->
+  <section class="product-section" id="product">
+    <p class="section-label reveal">The First Drop</p>
+    <h2 class="product-heading reveal">A Glimpse of What's Coming</h2>
+    <div class="product-img-wrap reveal">
+      <img class="product-img" src="product.PNG" alt="Chonis underwear and box" />
+    </div>
+    <p class="product-caption reveal">Yeah, these are the chonis. And yeah, they go hard.</p>
+  </section>
+
+  <!-- STORY -->
+  <section class="section" id="story">
+    <div class="story-grid">
+      <div class="story-body reveal">
+        <p class="section-label">Oye, Listen</p>
+        <h2 class="story-heading">We Named It What Your Abuela Called It</h2>
+        <p>Growing up, everybody called them <em>chonis</em>. Your tía, your mom, your abuela yelling from the other room to grab clean ones before school. It's not a dirty word — it's a familiar one. And that's exactly the point.</p>
+        <p>Chonis isn't just men's underwear. It's for anyone who grew up hearing that word — the whole familia. Born from the intersection of Mexican and American culture, worn by everyone in between.</p>
+        <p>We took something everyday, something that made you laugh just hearing the name, and made it luxurious. Because why not? La comunidad deserves nice things — even the ones you don't show off at the dinner table.</p>
+      </div>
+      <div class="reveal">
+        <div class="ornament-frame">
+          <p class="ornament-quote">"You called them chonis. Now they're a whole brand. You're welcome."</p>
+          <p class="ornament-attr">— Chonis · Est. 2025</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PILLARS -->
+  <div class="pillars">
+    <div class="pillars-inner">
+      <p class="section-label reveal" style="text-align:center;">What We're About</p>
+      <div class="pillars-grid">
+        <div class="pillar reveal">
+          <span class="pillar-icon">◆</span>
+          <h3>Roots</h3>
+          <p>From the mercados to the swap meet, the block to the boardroom — this is for all of us. No exceptions.</p>
+        </div>
+        <div class="pillar reveal">
+          <span class="pillar-icon">◆</span>
+          <h3>Craft</h3>
+          <p>Soft. Fitted. Built to last. We didn't come this far to make you uncomfortable down there.</p>
+        </div>
+        <div class="pillar reveal">
+          <span class="pillar-icon">◆</span>
+          <h3>Pride</h3>
+          <p>You don't have to explain the name. Anyone who gets it, gets it. And if they don't — that's on them.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter" id="join">
+    <p class="section-label reveal">Don't Sleep On It</p>
+    <h2 class="newsletter-heading reveal">Get on the List</h2>
+    <p class="newsletter-sub reveal">Be the first to know when the chonis drop. No spam, no nonsense — just the good stuff straight to your inbox.</p>
+    <div class="form-row reveal">
+      <input type="email" id="emailInput" placeholder="Your email address" />
+      <button onclick="handleSignup()">Notify Me</button>
+    </div>
+    <p class="form-note reveal">By signing up you agree to receive brand updates.</p>
+    <p class="success-msg" id="successMsg">Órale. You're on the list. 🖤</p>
+  </section>
+
+  <footer>
+    <img src="Chonis-Logo.png" alt="Chonis" class="footer-logo-img" />
+    <p class="footer-copy">© 2025 Chonis. All rights reserved. · Para toda la comunidad.</p>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          e.target.style.transitionDelay = (i % 3) * 0.1 + 's';
+          e.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+
+    function handleSignup() {
+      const email = document.getElementById('emailInput').value;
+      if (!email || !email.includes('@')) {
+        document.getElementById('emailInput').style.borderColor = '#5a2020';
+        return;
+      }
+      document.querySelector('.form-row').style.display = 'none';
+      document.querySelector('.form-note').style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    }
+
+    document.getElementById('emailInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleSignup();
+    });
+  </script>
+</body>
+</html>
